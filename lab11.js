@@ -4,6 +4,7 @@ const assert = require('assert')
 const path = require('path')
 const code = fs.readFileSync(path.resolve(process.env.USER_CODE_DIR, 'index.html'), 'utf8')
 const puppeteer = require('puppeteer')
+const { spawn } = require('child_process')
 
 async function retry(fn, ms) {
 	try {
@@ -41,6 +42,7 @@ await Promise.all([page.addScriptTag({url: 'https://code.jquery.com/jquery-3.5.1
 
 		try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($('a').length == 1);;
 return true
 }, code)
@@ -51,6 +53,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($('footer').length == 1);;
 return true
 }, code)
@@ -61,6 +64,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($('a').eq(0).attr('href') == "#footer");;
 return true
 }, code)
@@ -71,6 +75,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert(typeof $('a').eq(0).attr('target') == typeof undefined || $('a').eq(0).attr('target') == true);;
 return true
 }, code)
@@ -81,6 +86,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($('a').eq(0).text().match(/Jump to Bottom/gi));;
 return true
 }, code)
@@ -91,6 +97,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($('footer').eq(0).attr('id') == "footer");;
 return true
 }, code)

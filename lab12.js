@@ -4,6 +4,7 @@ const assert = require('assert')
 const path = require('path')
 const code = fs.readFileSync(path.resolve(process.env.USER_CODE_DIR, 'index.html'), 'utf8')
 const puppeteer = require('puppeteer')
+const { spawn } = require('child_process')
 
 async function retry(fn, ms) {
 	try {
@@ -41,7 +42,8 @@ await Promise.all([page.addScriptTag({url: 'https://code.jquery.com/jquery-3.5.1
 
 		try {
 const test = await page.evaluate((code) => {
-assert(($("a[href=\\"https://freecatphotoapp.com\\"]").length > 0 || $("a[href=\\"http://www.freecatphotoapp.com\\"]").length > 0));;
+window.assert = chai.assert;
+assert(($("a[href=\"https://freecatphotoapp.com\"]").length > 0 || $("a[href=\"http://www.freecatphotoapp.com\"]").length > 0));;
 return true
 }, code)
 assert(test)
@@ -51,7 +53,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert($("a").text().match(/cat\\sphotos/gi));;
+window.assert = chai.assert;
+assert($("a").text().match(/cat\sphotos/gi));;
 return true
 }, code)
 assert(test)
@@ -61,6 +64,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($("p") && $("p").length > 2);;
 return true
 }, code)
@@ -71,7 +75,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert(($("a[href=\\"https://freecatphotoapp.com\\"]").parent().is("p") || $("a[href=\\"http://www.freecatphotoapp.com\\"]").parent().is("p")));;
+window.assert = chai.assert;
+assert(($("a[href=\"https://freecatphotoapp.com\"]").parent().is("p") || $("a[href=\"http://www.freecatphotoapp.com\"]").parent().is("p")));;
 return true
 }, code)
 assert(test)
@@ -81,7 +86,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert(($("a[href=\\"https://freecatphotoapp.com\\"]").parent().text().match(/View\\smore\\s/gi) || $("a[href=\\"http://www.freecatphotoapp.com\\"]").parent().text().match(/View\\smore\\s/gi)));;
+window.assert = chai.assert;
+assert(($("a[href=\"https://freecatphotoapp.com\"]").parent().text().match(/View\smore\s/gi) || $("a[href=\"http://www.freecatphotoapp.com\"]").parent().text().match(/View\smore\s/gi)));;
 return true
 }, code)
 assert(test)
@@ -91,7 +97,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert(!$("a").text().match(/View\\smore/gi));;
+window.assert = chai.assert;
+assert(!$("a").text().match(/View\smore/gi));;
 return true
 }, code)
 assert(test)
@@ -101,7 +108,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert(code.match(/<\\/p>/g) && code.match(/<p/g) && code.match(/<\\/p>/g).length === code.match(/<p/g).length);;
+window.assert = chai.assert;
+assert(code.match(/<\/p>/g) && code.match(/<p/g) && code.match(/<\/p>/g).length === code.match(/<p/g).length);;
 return true
 }, code)
 assert(test)
@@ -111,7 +119,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert(code.match(/<\\/a>/g) && code.match(/<a/g) && code.match(/<\\/a>/g).length === code.match(/<a/g).length);;
+window.assert = chai.assert;
+assert(code.match(/<\/a>/g) && code.match(/<a/g) && code.match(/<\/a>/g).length === code.match(/<a/g).length);;
 return true
 }, code)
 assert(test)

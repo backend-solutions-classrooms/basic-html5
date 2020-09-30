@@ -4,6 +4,7 @@ const assert = require('assert')
 const path = require('path')
 const code = fs.readFileSync(path.resolve(process.env.USER_CODE_DIR, 'index.html'), 'utf8')
 const puppeteer = require('puppeteer')
+const { spawn } = require('child_process')
 
 async function retry(fn, ms) {
 	try {
@@ -41,6 +42,7 @@ await Promise.all([page.addScriptTag({url: 'https://code.jquery.com/jquery-3.5.1
 
 		try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 const inputElem = document.querySelector('form input'); assert(inputElem.getAttribute('type') === 'text' && inputElem.getAttribute('placeholder') === 'cat photo URL');;
 return true
 }, code)
@@ -51,6 +53,7 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
+window.assert = chai.assert;
 assert($("form").attr("action") === "https://freecatphotoapp.com/submit-cat-photo");;
 return true
 }, code)
@@ -61,7 +64,8 @@ results.push(false)
 }
 try {
 const test = await page.evaluate((code) => {
-assert(code.match(/<\\/form>/g) && code.match(/<form [^<]*>/g) && code.match(/<\\/form>/g).length === code.match(/<form [^<]*>/g).length);;
+window.assert = chai.assert;
+assert(code.match(/<\/form>/g) && code.match(/<form [^<]*>/g) && code.match(/<\/form>/g).length === code.match(/<form [^<]*>/g).length);;
 return true
 }, code)
 assert(test)
